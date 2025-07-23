@@ -5,6 +5,10 @@ services:
     plan: free
     pythonVersion: "3.12"
     buildCommand: |
+      # Set Python 3.12 explicitly
+      python3.12 -m venv venv
+      . venv/bin/activate
+      
       # Install system dependencies
       apt-get update && apt-get install -y \
         cmake \
@@ -16,12 +20,22 @@ services:
         libzstd-dev \
         libbz2-dev
       
-      # Upgrade pip and setuptools
-      pip install --upgrade pip setuptools
+      # Upgrade pip and setuptools first
+      python -m pip install --upgrade pip setuptools wheel
       
-      # Install pyarrow with prebuilt wheels first
-      pip install pyarrow==15.0.2 --only-binary :all:
+      # Install core dependencies first
+      python -m pip install --upgrade \
+        pygments==2.19.2 \
+        markdown-it-py==3.0.0 \
+        rich==14.0.0 \
+        --no-cache-dir
+      
+      # Install pyarrow with prebuilt wheels
+      python -m pip install pyarrow==15.0.2 --only-binary :all: --no-cache-dir
       
       # Install the rest of the requirements
-      pip install -r requirements.txt
+      python -m pip install -r requirements.txt --no-cache-dir
+      
+      # Verify installation
+      python -c "import pyarrow; print(f'PyArrow version: {pyarrow.__version__}')"
     startCommand: "python app.py"
