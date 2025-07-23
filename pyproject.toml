@@ -30,7 +30,7 @@ dependencies = [
     "packaging==24.1",
     "pillow==11.0.0",
     "protobuf==3.20.3",  # Updated from 5.28.4
-    "pyarrow==15.0.2",
+    "pyarrow==14.0.2",
     "pydeck==0.9.1",
     "pyparsing==3.2.0",
     "python-dateutil==2.9.0.post0",
