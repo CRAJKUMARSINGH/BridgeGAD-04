@@ -2,6 +2,11 @@ import pandas as pd
 import numpy as np
 from io import BytesIO
 import logging
+import streamlit as st
+
+st.title("BridgeGAD-04")
+
+# your Streamlit logic here
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
