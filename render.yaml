@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: bridge-gad
+    env: python
+    plan: free
+    pythonVersion: "3.12"
+    buildCommand: |
+      # Install system dependencies
+      apt-get update && apt-get install -y \
+        cmake \
+        g++ \
+        libarrow-dev \
+        zlib1g-dev \
+        libssl-dev \
+        liblz4-dev \
+        libzstd-dev \
+        libbz2-dev
+      
+      # Upgrade pip and setuptools
+      pip install --upgrade pip setuptools
+      
+      # Install pyarrow with prebuilt wheels first
+      pip install pyarrow==15.0.2 --only-binary :all:
+      
+      # Install the rest of the requirements
+      pip install -r requirements.txt
+    startCommand: "python app.py"
