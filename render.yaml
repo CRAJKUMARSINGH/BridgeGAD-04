@@ -5,12 +5,29 @@ services:
     plan: free
     pythonVersion: "3.12"
     buildCommand: |
-      # Set Python 3.12 explicitly
+      # Enable verbose output and error handling
+      set -ex
+      
+      # Print environment information
+      echo "=== System Information ==="
+      uname -a
+      lsb_release -a 2>/dev/null || echo "lsb_release not available"
+      echo "Python version: $(python3 --version 2>&1)"
+      echo "Python path: $(which python3)"
+      
+      # Create and activate virtual environment
+      echo "=== Setting up Python 3.12 virtual environment ==="
       python3.12 -m venv venv
-      . venv/bin/activate
+      source venv/bin/activate
+      
+      # Print Python and pip versions
+      echo "Python version in venv: $(python --version)"
+      echo "Pip version: $(pip --version)"
       
       # Install system dependencies
-      apt-get update && apt-get install -y \
+      echo "=== Installing system dependencies ==="
+      apt-get update -q
+      apt-get install -y --no-install-recommends \
         cmake \
         g++ \
         libarrow-dev \
@@ -20,22 +37,68 @@ services:
         libzstd-dev \
         libbz2-dev
       
-      # Upgrade pip and setuptools first
+      # Upgrade pip and setuptools
+      echo "=== Upgrading pip and setuptools ==="
       python -m pip install --upgrade pip setuptools wheel
       
-      # Install core dependencies first
-      python -m pip install --upgrade \
-        pygments==2.19.2 \
-        markdown-it-py==3.0.0 \
-        rich==14.0.0 \
-        --no-cache-dir
+      # Install core dependencies one by one with error handling
+      echo "=== Installing core dependencies ==="
+      for pkg in \
+        "pygments==2.19.2" \
+        "markdown-it-py==3.0.0" \
+        "rich==14.0.0"; do
+        echo "Installing $pkg..."
+        python -m pip install --no-cache-dir "$pkg" || echo "Warning: Failed to install $pkg"
+      done
       
       # Install pyarrow with prebuilt wheels
-      python -m pip install pyarrow==15.0.2 --only-binary :all: --no-cache-dir
+      echo "=== Installing pyarrow ==="
+      python -m pip install --only-binary :all: --no-cache-dir pyarrow==15.0.2 || {
+        echo "=== PyArrow installation failed. Trying alternative installation method... ==="
+        # Try with additional build dependencies
+        apt-get install -y python3-dev \
+          libboost-filesystem-dev \
+          libboost-system-dev \
+          libboost-regex-dev \
+          libjpeg-dev \
+          libpng-dev \
+          libtiff-dev \
+          libwebp-dev \
+          libopenblas-dev
+        python -m pip install --no-cache-dir pyarrow==15.0.2
+      }
       
       # Install the rest of the requirements
-      python -m pip install -r requirements.txt --no-cache-dir
+      echo "=== Installing project requirements ==="
+      python -m pip install --no-cache-dir -r requirements.txt
       
-      # Verify installation
-      python -c "import pyarrow; print(f'PyArrow version: {pyarrow.__version__}')"
+      # Verify critical installations
+      echo "=== Verifying installations ==="
+      python -c "
+      import sys
+      print(f'Python {sys.version}')
+      
+      try:
+          import pyarrow
+          print(f'PyArrow version: {pyarrow.__version__}')
+      except ImportError as e:
+          print(f'PyArrow import failed: {e}')
+          sys.exit(1)
+      
+      try:
+          import pandas as pd
+          print(f'Pandas version: {pd.__version__}')
+      except ImportError as e:
+          print(f'Pandas import failed: {e}')
+      
+      try:
+          import streamlit as st
+          print(f'Streamlit version: {st.__version__}')
+      except ImportError as e:
+          print(f'Streamlit import failed: {e}')
+      
+      print('\nAll critical imports succeeded!')
+      "
+      
+      echo "=== Build completed successfully ==="
     startCommand: "python app.py"
