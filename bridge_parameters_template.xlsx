@@ -1,0 +1,72 @@
+# This file should be generated dynamically by the ParameterManager class
+# It's included here as a placeholder but will be created when users click "Generate Template"
+
+import pandas as pd
+from io import BytesIO
+import openpyxl
+
+def create_bridge_parameters_template():
+    """Create a bridge parameters template Excel file"""
+    
+    data = [
+        ['NSPAN', 3, 'Number of spans', 'int', 1, 51, ''],
+        ['SPAN1', 30.0, 'Span length (m)', 'float', 3, 100, 'm'],
+        ['LBRIDGE', 90.0, 'Total bridge length (m)', 'float', 3, 1000, 'm'],
+        ['BRIDGEW', 12.0, 'Bridge width (m)', 'float', 6, 30, 'm'],
+        ['SKEW', 0.0, 'Skew angle (degrees)', 'float', 0, 45, 'degrees'],
+        ['RTL', 105.0, 'Riding surface level (m)', 'float', 90, 200, 'm'],
+        ['DATUM', 100.0, 'Drawing datum level (m)', 'float', 80, 150, 'm'],
+        ['ABTL', 0.0, 'Left abutment chainage (m)', 'float', 0, 100, 'm'],
+        ['DECKT', 1.2, 'Deck thickness (m)', 'float', 0.8, 3.0, 'm'],
+        ['CAPT', 104.0, 'Pier cap top level (m)', 'float', 90, 200, 'm'],
+        ['CAPB', 102.0, 'Pier cap bottom level (m)', 'float', 85, 195, 'm'],
+        ['CAPW', 1.2, 'Pier cap width (m)', 'float', 0.8, 3.0, 'm'],
+        ['PIERTW', 0.8, 'Pier top width (m)', 'float', 0.5, 2.0, 'm'],
+        ['BATTR', 6.0, 'Pier batter ratio', 'float', 3, 20, 'ratio'],
+        ['PIER_WIDTH', 2.0, 'Pier width in plan (m)', 'float', 1.0, 5.0, 'm'],
+        ['FUTRL', 98.0, 'Foundation top level (m)', 'float', 80, 150, 'm'],
+        ['FUTD', 1.0, 'Foundation depth (m)', 'float', 0.5, 3.0, 'm'],
+        ['FUTW', 2.5, 'Foundation width (m)', 'float', 1.5, 5.0, 'm'],
+        ['ABUT_HEIGHT', 6.0, 'Abutment height (m)', 'float', 3, 15, 'm'],
+        ['ABUT_WIDTH', 1.5, 'Abutment width (m)', 'float', 1.0, 3.0, 'm'],
+        ['FOOT_LENGTH', 8.0, 'Abutment footing length (m)', 'float', 4, 15, 'm'],
+        ['FOOT_THICK', 1.2, 'Abutment footing thickness (m)', 'float', 0.8, 2.5, 'm'],
+        ['APPR_LENGTH', 8.0, 'Approach slab length (m)', 'float', 5, 15, 'm'],
+        ['APPR_THICK', 0.3, 'Approach slab thickness (m)', 'float', 0.2, 0.6, 'm'],
+        ['SCALE1', 100.0, 'Drawing scale numerator', 'float', 50, 1000, ''],
+        ['SCALE2', 50.0, 'Drawing scale denominator', 'float', 25, 200, '']
+    ]
+    
+    df = pd.DataFrame(data, columns=[
+        'Parameter', 'Value', 'Description', 'Type', 'Min', 'Max', 'Units'
+    ])
+    
+    # Save to BytesIO buffer
+    buffer = BytesIO()
+    with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Bridge_Parameters')
+        
+        # Get the workbook and worksheet
+        workbook = writer.book
+        worksheet = writer.sheets['Bridge_Parameters']
+        
+        # Auto-adjust column widths
+        for column in worksheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+            adjusted_width = (max_length + 2) * 1.2
+            worksheet.column_dimensions[column_letter].width = adjusted_width
+    
+    return buffer.getvalue()
+
+# This function can be called to create the template file
+if __name__ == "__main__":
+    template_content = create_bridge_parameters_template()
+    with open("bridge_parameters_template.xlsx", "wb") as f:
+        f.write(template_content)

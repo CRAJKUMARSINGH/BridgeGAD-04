@@ -1,0 +1,24 @@
+﻿[tool.poetry]
+name = "bridgegad-04"
+version = "0.1.0"
+description = "BridgeGAD-04 Streamlit app"
+authors = ["Your Name <your.email@example.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.12"
+streamlit = "1.47.0"
+pandas = "2.2.3"
+ezdxf = "1.4.2"
+openpyxl = "3.1.5"
+numpy = "1.26.4"
+matplotlib = "3.8.2"
+plotly = "5.17.0"
+altair = "5.5.0"
+attrs = "25.3.0"
+blinker = "1.9.0"
+# Add remaining dependencies from your requirements.txt
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
