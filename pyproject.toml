@@ -1,24 +1,49 @@
-﻿[tool.poetry]
-name = "bridgegad-04"
+﻿[project]
+name = "BridgeGAD-04"
 version = "0.1.0"
-description = "BridgeGAD-04 Streamlit app"
-authors = ["Your Name <your.email@example.com>"]
-license = "MIT"
-
-[tool.poetry.dependencies]
-python = ">=3.11,<3.12"
-streamlit = "1.47.0"
-pandas = "2.2.3"
-ezdxf = "1.4.2"
-openpyxl = "3.1.5"
-numpy = "1.26.4"
-matplotlib = "3.8.2"
-plotly = "5.17.0"
-altair = "5.5.0"
-attrs = "25.3.0"
-blinker = "1.9.0"
-# Add remaining dependencies from your requirements.txt
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires-python = ">=3.11,<3.12"
+dependencies = [
+    "streamlit==1.47.0",
+    "pandas==2.2.3",
+    "ezdxf==1.4.2",
+    "openpyxl==3.1.5",
+    "numpy==1.26.4",
+    "matplotlib==3.8.2",
+    "plotly==5.17.0",
+    "altair==5.5.0",
+    "narwhals==1.14.2",
+    "attrs==25.3.0",
+    "blinker==1.9.0",
+    "cachetools==6.1.0",
+    "certifi==2025.7.14",
+    "charset-normalizer==3.4.2",
+    "click==8.2.1",
+    "colorama==0.4.6",
+    "et-xmlfile==2.0.0",
+    "fonttools==4.59.0",
+    "gitpython==3.1.43",
+    "idna==3.10",
+    "jinja2==3.1.4",
+    "jsonschema==4.25.0",
+    "jsonschema-specifications==2024.10.1",
+    "markupsafe==3.0.2",
+    "packaging==24.1",
+    "pillow==11.0.0",
+    "protobuf==5.28.3",  # Updated from 5.28.4
+    "pyarrow==17.0.0",
+    "pydeck==0.9.1",
+    "pyparsing==3.2.0",
+    "python-dateutil==2.9.0.post0",
+    "pytz==2024.2",
+    "referencing==0.36.0",
+    "requests==2.32.3",
+    "rpds-py==0.26.0",
+    "six==1.17.0",
+    "smmap==5.0.2",
+    "tenacity==9.1.2",
+    "toml==0.10.2",
+    "tornado==6.5.1",
+    "typing-extensions==4.14.1",
+    "tzdata==2025.2",
+    "urllib3==2"
+]
