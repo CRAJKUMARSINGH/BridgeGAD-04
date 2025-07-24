@@ -1,4 +1,4 @@
-# Core dependencies
+# Core dependencies with compatible versions for Python 3.10
 numpy==1.26.4
 pandas==2.2.3
 matplotlib==3.8.2
@@ -6,13 +6,21 @@ openpyxl==3.1.5
 plotly==5.17.0
 streamlit==1.32.0
 pyarrow==14.0.2
+
+# Runtime dependencies
 python-dateutil==2.9.0.post0
 pytz==2024.2
-pillow==11.0.0
+pillow==10.3.0  # Downgraded to be compatible with streamlit 1.32.0
 requests==2.32.3
 urllib3==2.0.0
-rich==14.0.0
+
+# UI and formatting
+rich==13.7.1  # Downgraded for better compatibility
 markdown-it-py==3.0.0
 pygments==2.19.2
 protobuf==3.20.3
-# Add any other runtime dependencies needed by your app below
+
+# Explicit dependencies to avoid conflicts
+typing-extensions==4.9.0
+setuptools==69.0.3
+wheel==0.42.0
