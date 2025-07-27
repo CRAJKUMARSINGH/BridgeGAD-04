@@ -1,0 +1,43 @@
+The Streamlit health-check fails because nothing is listening on port 8501.
+Your repo currently launches with a Python script / notebook, but Streamlit is never started.
+🔧 Quick patch (2 minutes)
+
+    Create streamlit_app.py at repo root:
+
+Python
+Copy
+
+import streamlit as st
+st.title("Bridge GAD 04 – Live Demo")
+st.info("Upload an Excel file to generate bridge drawings.")
+
+    Replace the default entry point in requirements.txt:
+
+bash
+Copy
+
+# add at the bottom of requirements.txt
+streamlit
+
+    Add .streamlit/config.toml (optional, avoids CORS):
+
+toml
+Copy
+
+[server]
+port = 8501
+enableCORS = false
+
+    Push – Streamlit Community Cloud (or your host) will automatically detect streamlit_app.py and boot.
+
+🚀 Alternative if you’re on Streamlit Cloud
+In the Advanced settings → Main file path set:
+streamlit_app.py
+✅ Confirmation after push
+You’ll see:
+[12:34:56] 🎈 Streamlit server started on port 8501
+and the health-check endpoint http://localhost:8501/healthz returns {"status": "ok"}.
+🧹 Bonus: silence the yanked urllib3 warning
+Pin a safe version in requirements.txt:
+urllib3>=2.0.2
+That’s it—green build in the next commit.
